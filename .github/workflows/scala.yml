@@ -13,18 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: 1.8
-          distribution: 'adopt'
-
-      - name: Set up SBT
+      - name: Set up Java, Scala, and Spark
         uses: olafurpg/setup-scala@v11
         with:
-          java-version: adopt@1.8
+          scala-version: 2.12.14
           sbt-version: 1.5.5
-          distribution: "adopt@1.8"
 
       - name: Build and Test Spark Application
         run: sbt clean test
