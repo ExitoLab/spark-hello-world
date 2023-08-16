@@ -16,7 +16,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: 'adopt@1.8'
+          java-version: 1.8
           distribution: 'adopt'
 
       - name: Set up SBT
