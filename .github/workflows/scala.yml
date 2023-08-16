@@ -17,6 +17,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '1.8'
+          sbt-version: 1.5.5
+          distribution: "adopt@1.8"
 
       - name: Set up SBT
         uses: olafurpg/setup-scala@v11
