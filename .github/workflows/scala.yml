@@ -1,5 +1,4 @@
 name: Spark Build and Test
-
 on:
   push:
     branches:
