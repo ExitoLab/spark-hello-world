@@ -9,9 +9,6 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-core" % "2.14.1"
 )
 
-libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.14.1"
-libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.14.1"
-
 
 // Define the sbt-assembly settings
 assemblyJarName in assembly := "sparkwordcount.jar"
@@ -19,3 +16,6 @@ assemblyMergeStrategy in assembly := {
   case PathList("META-INF", xs @ _*) => MergeStrategy.discard
   case x => MergeStrategy.first
 }
+
+// Add this line to build.sbt
+resourceDirectory in Compile := baseDirectory.value / "src" / "main" / "resources"

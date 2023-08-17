@@ -1,41 +1,33 @@
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
 
 object WordCountSpark {
   def main(args: Array[String]): Unit = {
-    // Create a SparkSession
     val spark = SparkSession.builder()
       .appName("WordCountSpark")
       .master("local[*]") // Use appropriate master URL for your cluster
       .getOrCreate()
 
     try {
-      import spark.implicits._ // Import implicit encoders
+      val logger = org.apache.logging.log4j.LogManager.getLogger(getClass.getName)
 
-      // Read the input text file into a DataFrame
-      val inputPath = "custom_folder/input.txt" // Replace with the actual path
+      val inputPath = "custom_folder/input.txt" // Relative path to the developer's input file
+      val outputPath = "custom_folder/output"   // Relative path for the output directory
+
       val textDF = spark.read.textFile(inputPath)
+      val wordsDF = textDF.select(explode(split(col("value"), " ")).as("word"))
 
-      // Perform word count using DataFrame API
-      val wordsDF = textDF
-        .flatMap(line => line.split(" "))
-        .filter(word => word.nonEmpty)
-        .groupBy("value")
+      val wordCountDF = wordsDF
+        .groupBy("word")
         .count()
-        .orderBy($"count".desc) // Use DataFrame API for ordering
 
-      // Show the word count results
-      wordsDF.show()
-
-      // Optionally, write the results to an output file
-      val outputPath = "custom_folder/output" // Replace with the desired output path
-      wordsDF.write.csv(outputPath)
-
-      println("Word count completed successfully.")
+      wordCountDF.write.text(outputPath)
+      logger.info("Word count completed successfully.")
     } catch {
       case ex: Exception =>
-        println(s"An error occurred: ${ex.getMessage}")
+        val logger = org.apache.logging.log4j.LogManager.getLogger(getClass.getName)
+        logger.error(s"An error occurred: ${ex.getMessage}", ex)
     } finally {
-      // Stop the SparkSession
       spark.stop()
     }
   }
