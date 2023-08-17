@@ -29,6 +29,9 @@ jobs:
       - name: Build and Test Spark Application
         run: sbt clean test
 
+      - name: Build JAR
+        run: sbt assembly
+
       - name: Determine Semantic Version
         id: semver
         run: |
