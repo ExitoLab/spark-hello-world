@@ -21,3 +21,18 @@ jobs:
 
       - name: Build and Test Spark Application
         run: sbt clean test
+
+      - name: Determine Semantic Version
+        id: semver
+        run: |
+          echo "SEMVER=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        run: |
+          docker build -t talk2toks/spark-word-count:${{ env.SEMVER }} .
+          docker tag talk2toks/spark-word-count:${{ env.SEMVER }}
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u talk2toks --password-stdin
+          docker push talk2toks/your-spark-app:${{ env.SEMVER }}

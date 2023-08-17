@@ -1,28 +1,41 @@
 import org.apache.spark.sql.SparkSession
 
-object WordCount {
+object WordCountSpark {
   def main(args: Array[String]): Unit = {
+    // Create a SparkSession
     val spark = SparkSession.builder()
-      .appName("WordCount")
+      .appName("WordCountSpark")
       .master("local[*]") // Use appropriate master URL for your cluster
       .getOrCreate()
 
     try {
-      val inputPath = "Custom_folder/input.txt" // Relative path to the developer's input file
-      val outputPath = "Custom_folder/output"   // Relative path for the output directory
+      import spark.implicits._ // Import implicit encoders
 
-      val textRDD = spark.sparkContext.textFile(inputPath)
-      val wordCountRDD = textRDD
+      // Read the input text file into a DataFrame
+      val inputPath = "custom_folder/input.txt" // Replace with the actual path
+      val textDF = spark.read.textFile(inputPath)
+
+      // Perform word count using DataFrame API
+      val wordsDF = textDF
         .flatMap(line => line.split(" "))
-        .map(word => (word, 1))
-        .reduceByKey(_ + _)
+        .filter(word => word.nonEmpty)
+        .groupBy("value")
+        .count()
+        .orderBy($"count".desc) // Use DataFrame API for ordering
 
-      wordCountRDD.saveAsTextFile(outputPath)
+      // Show the word count results
+      wordsDF.show()
+
+      // Optionally, write the results to an output file
+      val outputPath = "custom_folder/output" // Replace with the desired output path
+      wordsDF.write.csv(outputPath)
+
       println("Word count completed successfully.")
     } catch {
       case ex: Exception =>
         println(s"An error occurred: ${ex.getMessage}")
     } finally {
+      // Stop the SparkSession
       spark.stop()
     }
   }
