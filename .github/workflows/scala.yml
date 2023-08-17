@@ -74,6 +74,9 @@ jobs:
           DOCKER_BUILDKIT: 1
           DOCKER_AUTH_CONFIG: '{"auths": {"https://index.docker.io/v1/": {"username": "${{ secrets.DOCKER_USERNAME }}", "password": "${{ secrets.DOCKERHUB_TOKEN }}", "email": "igeadetokunbo@gmail.com"}}}'
 
+      - name: Look up images
+        run: docker image ls
+      
       # push the image manually, see above comment
       - name: Docker Build image
         run: docker build . -t ${{ secrets.DOCKER_USERNAME }}/spark-word-count:v0.1.0
