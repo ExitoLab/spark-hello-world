@@ -67,10 +67,14 @@ jobs:
         with:
           context: .
           #push: ${{ github.event.base_ref =='refs/heads/main' && github.ref_type == 'tag' && !startsWith(github.ref, 'refs/tags/v0.')}}
-          push: true
+          #push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/spark-word-count:v0.1.0
           labels: ${{ steps.metadata.outputs.labels }}
         env:
           DOCKER_BUILDKIT: 1
           DOCKER_AUTH_CONFIG: '{"auths": {"https://index.docker.io/v1/": {"username": "${{ secrets.DOCKER_USERNAME }}", "password": "${{ secrets.DOCKERHUB_TOKEN }}", "email": "igeadetokunbo@gmail.com"}}}'
+
+      # push the image manually, see above comment
+      - name: Push image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/spark-word-count:v0.1.0
 
