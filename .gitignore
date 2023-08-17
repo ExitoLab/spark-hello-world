@@ -7,18 +7,23 @@
 .history
 .lib/
 dist/*
-target/global-logging
-target/streams
-target/task-temp-directory
-target/scala-2.12/classes
-target/scala-2.12/sync
-target/scala-2.12/update
-target/scala-2.12/zinc
+target
+# target/streams
+# target/task-temp-directory
+# target/scala-2.12/classes
+# target/scala-2.12/sync
+# target/scala-2.12/update
+# target/scala-2.12/zinc
 lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
 
+project/project/target
+project/target
+
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+.history3
+.bsp
